@@ -11,8 +11,41 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside width="200px">Aside</el-aside>
-      <el-main>Main</el-main>
+      <el-aside width="200px">
+    <el-menu
+      default-active="1-1"
+      class="el-menu-vertical-demo"
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+      router>
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>用户管理</span>
+        </template>
+          <el-menu-item index="/users">
+              <i class="el-icon-menu"></i>
+              <span slot="title">用户列表</span>
+            </el-menu-item>
+      </el-submenu>
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>权限管理</span>
+        </template>
+          <el-menu-item index="2-1">
+              <i class="el-icon-menu"></i>
+              <span slot="title">角色列表</span>
+            </el-menu-item>
+             <el-menu-item index="2-2">
+              <i class="el-icon-menu"></i>
+              <span slot="title">权限列表</span>
+            </el-menu-item>
+      </el-submenu>
+    </el-menu>
+      </el-aside>
+      <el-main><router-view/></el-main>
     </el-container>
   </el-container>
 </template>
@@ -73,6 +106,9 @@ export default {
      }
      .el-aside {
     background-color: #545C64;
+      .el-submenu {
+      width: 200px;
+    }
      }
      .el-main {
      background-color: #D4DFE4;
