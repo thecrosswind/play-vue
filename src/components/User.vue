@@ -9,7 +9,7 @@
   <el-input placeholder="请输入内容" v-model="query" class="input-with-select">
     <el-button slot="append" @click="searchUser" icon="el-icon-search"></el-button>
   </el-input>
-   <el-button type="success" plain>添加用户</el-button>
+   <el-button type="success" plain @click="showmodel">添加用户</el-button>
 </div>
  <el-table
       :data="dataList"
@@ -33,7 +33,7 @@
         label="状态">
         <template slot-scope="scope">
         <el-switch
-    @change="editStatus(scope.row)" 
+     @change="editStatus(scope.row)"
      v-model="scope.row.mg_state"
      active-color="#13ce66"
      inactive-color="#ff4949">
@@ -43,7 +43,7 @@
        <el-table-column
         label="操作">
         <template slot-scope="scope">
-        <el-button type="primary" icon="el-icon-edit" size="mini" plain circle></el-button>
+        <el-button type="primary" icon="el-icon-edit" @click="editUsers(scope.row)" size="mini" plain circle></el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
@@ -68,11 +68,53 @@
       :total="total">
     </el-pagination>
   </div>
+  <el-dialog
+  title="添加用户"
+  :visible.sync="dialogVisible"
+  width="40%">
+  <el-form :model="form" :rules="rules" ref="form" label-width="80px" class="demo-ruleForm">
+  <el-form-item label="用户名" prop="username">
+    <el-input  v-model="form.username" placeholder="请输入用户名"></el-input>
+  </el-form-item>
+    <el-form-item label="密码" prop="password">
+    <el-input  v-model="form.password"  placeholder="请输入密码" type="password"></el-input>
+  </el-form-item>
+  <el-form-item label="邮箱" prop="email">
+    <el-input  v-model="form.email"   ></el-input>
+  </el-form-item>
+  <el-form-item label="电话" prop="mobile">
+    <el-input  v-model="form.mobile"></el-input>
+  </el-form-item>
+</el-form>
+ <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="editData">确 定</el-button>
+ </span>
+</el-dialog>
+<el-dialog
+  title="修改用户"
+  :visible.sync="editUser"
+  width="40%">
+  <el-form :model="edits" :rules="rules" ref="editse" label-width="80px" class="demo-ruleForm">
+ <el-form-item label="用户名">
+          <el-tag type="info">{{edits.username}}</el-tag>
+  </el-form-item>
+  <el-form-item label="邮箱" prop="email">
+    <el-input  v-model="edits.email"   ></el-input>
+  </el-form-item>
+  <el-form-item label="电话" prop="mobile">
+    <el-input  v-model="edits.mobile"></el-input>
+  </el-form-item>
+</el-form>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="editUser = false">取 消</el-button>
+    <el-button type="primary" @click="editqd">确 定</el-button>
+  </span>
+</el-dialog>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -81,7 +123,36 @@ export default {
       currentPage: 1,
       pageSize: 2,
       total: 0,
-      baseURL: 'http://localhost:8888/api/private/v1/'
+      dialogVisible: false,
+      editUser: false,
+      form: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
+      },
+      edits: {
+        username: '',
+        id: '',
+        email: '',
+        mobile: ''
+      },
+      rules: {
+        username: [
+          { required: true, message: '用户名不能为空', trigger: 'change' },
+          { min: 3, max: 9, message: '长度在 3 到 9 个字符', trigger: 'change' }
+        ],
+        password: [
+          {required: true, message: '密码不能为空', trigger: 'change'},
+          {min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'change'}
+        ],
+        email: [
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        mobile: [
+          {pattern: /1\d{10}$/, message: '请输入正确手机号', trigger: 'blur'}
+        ]
+      }
     }
   },
   created() {
@@ -89,22 +160,19 @@ export default {
   },
   methods: {
     getListData() {
-      axios({
+      this.axios({
         method: 'get',
-        url: this.baseURL + 'users',
+        url: 'users',
         params: {
           query: this.query,
           pagenum: this.currentPage,
           pagesize: this.pageSize
-        },
-        headers: {
-          Authorization: localStorage.getItem('token')
         }
       }).then(res => {
-        // console.log(res.data)
-        if (res.data.meta.status === 200) {
-          this.dataList = res.data.data.users
-          this.total = res.data.data.total
+        // console.log(res)
+        if (res.meta.status === 200) {
+          this.dataList = res.data.users
+          this.total = res.data.total
         }
       })
     },
@@ -120,16 +188,13 @@ export default {
     },
     editStatus(data) {
       // console.log(data)
-      axios({
+      this.axios({
         method: 'put',
-        url: this.baseURL + `users/${data.id}/state/${data.mg_state}`,
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
+        url: `users/${data.id}/state/${data.mg_state}`
       }).then(res => {
-        // console.log(res.data)
-        if (res.data.meta.status === 200) {
-          this.$message.success('修改成功')
+        // console.log(res)
+        if (res.meta.status === 200) {
+          this.$message.success('修改状态成功')
         }
       })
     },
@@ -139,15 +204,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        axios({
+        this.axios({
           method: 'delete',
-          url: this.baseURL + `users/${id}`,
-          headers: {
-            Authorization: localStorage.getItem('token')
-          }
+          url: `users/${id}`
         }).then(res => {
-          console.log(res.data)
-          if (res.data.meta.status === 200) {
+          console.log(res)
+          if (res.meta.status === 200) {
             this.$message.success('删除成功')
             if (this.dataList.length <= 1 && this.currentPage > 1) {
               this.currentPage--
@@ -155,15 +217,59 @@ export default {
             this.getListData()
           }
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })         
-      })    
+      })
+        .catch(() => {
+          this.$message.info('取消删除')
+        })
     },
     searchUser() {
       this.getListData()
+    },
+    showmodel() {
+      this.dialogVisible = true
+    },
+    editData() {
+      this.$refs.form.validate(() => {
+        this.axios({
+          method: 'post',
+          url: 'users',
+          data: this.form
+        }).then(res => {
+          console.log(res)
+          if (res.meta.status === 201) {
+            this.$refs.form.resetFields()
+            this.dialogVisible = false
+            this.$message.success('添加用户成功')
+            this.total++
+            this.currentPage = Math.ceil(this.total / this.pageSize)
+            this.getListData()
+          }
+        })
+      })
+    },
+    editUsers(users) {
+      this.editUser = true
+      this.edits.username = users.username
+      this.edits.id = users.id
+      this.edits.mobile = users.mobile
+      this.edits.email = users.email
+    },
+    editqd() {
+      this.$refs.editse.validate(() => {
+        this.axios({
+          method: 'put',
+          url: `users/${this.edits.id}`,
+          data: {
+            email: this.edits.email,
+            mobile: this.edits.mobile
+          }
+        }).then(res => {
+          if (res.meta.status === 200) {
+            this.editUser = false
+            this.getListData()
+          }
+        })
+      })
     }
   }
 }
@@ -174,7 +280,7 @@ export default {
    height: 40px;
   line-height: 40px;
  }
- .el-input {
+ .input-with-select {
   width: 300px;
   margin-bottom: 5px;
 }
