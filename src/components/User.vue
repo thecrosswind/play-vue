@@ -159,8 +159,8 @@ export default {
     this.getListData()
   },
   methods: {
-    getListData() {
-      this.axios({
+    async getListData() {
+      let res = await this.axios({
         method: 'get',
         url: 'users',
         params: {
@@ -168,13 +168,13 @@ export default {
           pagenum: this.currentPage,
           pagesize: this.pageSize
         }
-      }).then(res => {
-        // console.log(res)
-        if (res.meta.status === 200) {
-          this.dataList = res.data.users
-          this.total = res.data.total
-        }
       })
+      let {meta: {status}, data: {users, total}} = res
+      // console.log(res)
+      if (status === 200) {
+        this.dataList = users
+        this.total = total
+      }
     },
     handleCurrentChange(val) {
       // console.log(val)
@@ -186,41 +186,40 @@ export default {
       this.pageSize = val
       this.getListData()
     },
-    editStatus(data) {
+    async editStatus(data) {
       // console.log(data)
-      this.axios({
+      let res = await this.axios({
         method: 'put',
         url: `users/${data.id}/state/${data.mg_state}`
-      }).then(res => {
-        // console.log(res)
-        if (res.meta.status === 200) {
-          this.$message.success('修改状态成功')
-        }
       })
+      // console.log(res)
+      if (res.meta.status === 200) {
+        this.$message.success('修改状态成功')
+      }
     },
-    delUser(id) {
-      this.$confirm('确定删除该用户?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.axios({
+    async delUser(id) {
+      try {
+        // 弹出一个确认框
+        await this.$confirm('你确定要删除该用户吗?', '温馨提示', {
+          type: 'warning'
+        })
+        let res = await this.axios({
           method: 'delete',
           url: `users/${id}`
-        }).then(res => {
-          console.log(res)
-          if (res.meta.status === 200) {
-            this.$message.success('删除成功')
-            if (this.dataList.length <= 1 && this.currentPage > 1) {
-              this.currentPage--
-            }
-            this.getListData()
+        })
+        console.log(res)
+        if (res.meta.status === 200) {
+          this.$message.success('删除成功')
+          if (this.dataList.length <= 1 && this.currentPage > 1) {
+            this.currentPage--
           }
-        })
-      })
-        .catch(() => {
-          this.$message.info('取消删除')
-        })
+          this.getListData()
+        } else {
+          this.$message.error('删除失败')
+        }
+      } catch (e) {
+        this.$message.info('取消删除')
+      }
     },
     searchUser() {
       this.getListData()
@@ -228,24 +227,22 @@ export default {
     showmodel() {
       this.dialogVisible = true
     },
-    editData() {
-      this.$refs.form.validate(() => {
-        this.axios({
-          method: 'post',
-          url: 'users',
-          data: this.form
-        }).then(res => {
-          console.log(res)
-          if (res.meta.status === 201) {
-            this.$refs.form.resetFields()
-            this.dialogVisible = false
-            this.$message.success('添加用户成功')
-            this.total++
-            this.currentPage = Math.ceil(this.total / this.pageSize)
-            this.getListData()
-          }
-        })
+    async editData() {
+      await this.$refs.form.validate()
+      let res = await this.axios({
+        method: 'post',
+        url: 'users',
+        data: this.form
       })
+      console.log(res)
+      if (res.meta.status === 201) {
+        this.$refs.form.resetFields()
+        this.dialogVisible = false
+        this.$message.success('添加用户成功')
+        this.total++
+        this.currentPage = Math.ceil(this.total / this.pageSize)
+        this.getListData()
+      }
     },
     editUsers(users) {
       this.editUser = true
@@ -274,7 +271,6 @@ export default {
   }
 }
 </script>
-
 <style lang="less" scoped>
  .el-breadcrumb{
    height: 40px;

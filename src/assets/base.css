@@ -12,3 +12,7 @@ body {
 #app {
   height: 100%;
 }
+.el-breadcrumb {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  }
