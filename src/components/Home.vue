@@ -23,11 +23,11 @@
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理cs1</span>
+              <span>用户管理</span>
             </template>
             <el-menu-item index="/users">
               <i class="el-icon-menu"></i>
-              <span slot="title">用户列表</span>
+              <span slot="title">用户列表11</span>
             </el-menu-item>
           </el-submenu>
           <el-submenu index="2">
