@@ -22,7 +22,7 @@
       <el-form-item>
         <el-button type="primary"
                    @click="login">登录</el-button>
-        <el-button @click="reset">重置1</el-button>
+        <el-button @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
   </div>

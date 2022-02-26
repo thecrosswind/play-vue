@@ -43,12 +43,13 @@ router.beforeEach((to, from, next) => {
     next()
     return
   }
-  let token = localStorage.getItem('token')
-  if (token) {
-    next()
-  } else {
-    next('/login')
-  }
+  next()
+  // let token = localStorage.getItem('token')
+  // if (token) {
+  //   next()
+  // } else {
+  //   next('/login')
+  // }
 })
 
 export default router
