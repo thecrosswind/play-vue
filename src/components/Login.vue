@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { Toast } from "vant";
+// import axios from 'axios'
+import { Toast } from 'vant'
 export default {
-  data () {
+  data() {
     return {
       form: {
         username: '',
@@ -16,14 +16,14 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     Toast('错误提示')
   },
   methods: {
-    reset () {
+    reset() {
       // console.log(this.$refs)
     },
-    login () {
+    login() {
     }
   }
 }

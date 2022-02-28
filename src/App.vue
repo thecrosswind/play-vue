@@ -1,13 +1,24 @@
 <template>
   <div id="app">
+    <header></header>
+    <Login></Login>
+
     <!-- 配置路由出口 -->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {}
-</script>
+// 样式引入
+// import styles from './styles'
 
-<style>
-</style>
+import header from './components/header.vue'
+import Login from './components/Login.vue'
+
+export default {
+  components: {
+    header,
+    Login
+  }
+}
+</script>
