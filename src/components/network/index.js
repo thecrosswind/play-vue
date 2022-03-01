@@ -4,7 +4,7 @@ import axios from 'axios'
 import _ from 'underscore'
 import apis from './apis'
 
-const hostName = 'http://localhost:3000/'
+const hostName = 'https://music-api-ashy.vercel.app/'
 
 let axiosInstance = axios.create({
     baseURL: hostName,
