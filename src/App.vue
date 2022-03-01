@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <header></header>
-    <Login></Login>
 
     <!-- 配置路由出口 -->
     <router-view></router-view>
@@ -12,13 +10,9 @@
 // 样式引入
 // import styles from './styles'
 
-import header from './components/header.vue'
-import Login from './components/Login.vue'
+// import header from './components/header.vue'
+// import Login from './components/Login.vue'
 
 export default {
-  components: {
-    header,
-    Login
-  }
 }
 </script>
