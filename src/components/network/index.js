@@ -9,6 +9,7 @@ const hostName = 'https://music-api-ashy.vercel.app/'
 let axiosInstance = axios.create({
     baseURL: hostName,
     timeout: 30000,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json;charset=UTF-8',
     }
@@ -21,9 +22,8 @@ axiosInstance.interceptors.request.use(
         // console.log('haha ,请求被我拦截到了把', config)
         // config.headers.aa = 'bb'
         // config.baseURL = 'http://localhost:8888/api/private/v1/'
-        // config.headers.Authorization = localStorage.getItem('token')
+
         // config.headers['X-Real-IP'] = '211.161.244.70'
-        config.withCredentials = true
         return config
     },
     (error) => {

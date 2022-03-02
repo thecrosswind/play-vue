@@ -1,29 +1,47 @@
 <template>
-  <header class="header">
-    <h1>start</h1>
-    <div class="box">
-      users:<input
-        type="text"
-        placeholder="请输入用户名"
-        autofocus
-        v-model="task"
-        @keydown.enter="creat"
-      />
-      password:<input type="password" name="" id="" placeholder="请输入密码" />
-    </div>
-  </header>
+  <div>
+    <van-swipe style="height:200px"
+               :autoplay="3000">
+      <van-swipe-item v-for="(item, index) in images"
+                      :key="index">
+        <van-image height="200"
+                   :src="item.imageUrl" />
+      </van-swipe-item>
+    </van-swipe>
+
+  </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      task:"00",
+      task: "00",
+      images: [
+        // 'https://img01.yzcdn.cn/vant/apple-1.jpg',
+        // 'https://img01.yzcdn.cn/vant/apple-2.jpg',
+      ],
     }
   },
-    methods:{
-    creat(){
-      if(this.task.trim().length===0){
+  mounted () {
+    this.getBanner()
+  },
+  methods: {
+    async getBanner () {
+      const data = await this.$Network.get(6)
+      this.images = data.banners || []
+      console.log(data, '23123')
+    },
+    async  getUser () {
+      Toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+      });
+      const data = await this.$Network.get('5')
+      Toast.clear()
+    },
+    creat () {
+      if (this.task.trim().length === 0) {
         alert("用户名不能为空")
         return;
       }
