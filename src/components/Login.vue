@@ -88,6 +88,7 @@ export default {
       console.log(data, 'cscs')
       if (data.code == 200) {
         Toast('登录成功')
+        this.$router.push('/Layout')
       } else {
         Toast(data.msg)
       }
