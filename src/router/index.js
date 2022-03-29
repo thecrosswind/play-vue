@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '../components/Login.vue'
 import header from '../components/header.vue'
+import Home from '../views/Home/index.vue'
+import Layout from '../views/Layout/index.vue'
+import Play from '../views/Play/index.vue'
+import Search from '../views/Search/index.vue'
 
 
 Vue.use(Router)
@@ -19,6 +23,22 @@ const router = new Router({
     {
       path: '/header',
       component: header
+    },
+    {
+      path: '/layout/home',
+      component: Home
+    },
+    {
+      path: '/Layout',
+      component: Layout
+    },
+    {
+      path: '/Play',
+      component: Play
+    },
+    {
+      path: '/layout/Search',
+      component: Search
     }
   ]
 })
