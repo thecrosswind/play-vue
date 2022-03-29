@@ -80,6 +80,8 @@ export default {
     const res = await this.$Network.get('11')
     console.log(res)
     this.hotArr = res.result.hots
+    const data = await this.$Network.get('112')
+    console.log(data)
   },
   methods: {
     async getListFn() {
