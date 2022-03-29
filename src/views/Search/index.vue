@@ -144,7 +144,7 @@ export default {
         return
       }
       console.log(res)
-      this.resultList = [...this.resultList, ...res.data.result.songs]
+      this.resultList = [...this.resultList, ...res.result.songs]
       this.loading = false // 数据加载完毕-保证下一次还能触发onload
     }
   },

@@ -11,10 +11,10 @@ export default {
   props: {
     name: String, // 歌名
     author: String, // 歌手
-    id: Number, // 歌曲id (标记这首歌曲-为将来跳转播放页做准备)
+    id: Number // 歌曲id (标记这首歌曲-为将来跳转播放页做准备)
   },
   methods: {
-    playFn(){
+    playFn() {
       this.$router.push({
         path: '/play',
         query: {
@@ -23,7 +23,7 @@ export default {
       })
     }
   }
-};
+}
 </script>
 
 <style scoped>
